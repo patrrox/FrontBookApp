@@ -1,4 +1,4 @@
-import { Book } from "./book";
+import { Book } from "./models/book";
 
 export interface CartItem{
     book: Book;

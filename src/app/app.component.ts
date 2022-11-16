@@ -1,8 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ɵsetCurrentInjector } from '@angular/core';
-import { Book } from './book';
+import { NgForm } from '@angular/forms';
+import { Book } from './models/book';
 import { CartItem } from './cartItem';
-import { CatalogService } from './catalog.service';
+import { CatalogService } from './services/catalog.service';
+import { OrderService } from './services/orderService';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,7 @@ export class AppComponent implements OnInit{
   public catalog!: Book[];
   public cartItems: CartItem[] = [];
 
-  constructor(private catalogService: CatalogService){
+  constructor(private catalogService: CatalogService, private orderService : OrderService){
   }
 
   public getCatalog(): void {
@@ -73,6 +75,23 @@ export class AppComponent implements OnInit{
 
   public clearCart(): void {
     this.cartItems = []
+  }
+
+  public onOrderSubmit(orderForm: NgForm): void {
+    document.getElementById('cancel-order-button')!.click();
+    document.getElementById('close-cart-button')!.click();
+    console.log("Received form: {}")
+    this.orderService.submitOrder(orderForm.value, this.cartItems)
+      .subscribe(
+        (response: any) => {
+          console.log("Order submitted")
+          this.clearCart();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error.message);
+        }
+      )
+
   }
 
 }
