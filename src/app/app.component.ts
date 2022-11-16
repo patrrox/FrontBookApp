@@ -32,11 +32,11 @@ export class AppComponent implements OnInit{
 
 
   public addToCart(book: Book): void {
-    const current: CartItem | undefined  = this.cartItems.find(x => x.bookId === book.id);
+    const current: CartItem | undefined  = this.cartItems.find(x => x.book.id === book.id);
     if (current) {
       current.quantity += 1;
     } else {
-      this.cartItems.push({bookId: book.id, quantity: 1} as CartItem);
+      this.cartItems.push({book: book, quantity: 1} as CartItem);
     }
     console.log('Cart is: ' + JSON.stringify(this.cartItems));
   }
@@ -64,6 +64,15 @@ export class AppComponent implements OnInit{
     }
     container.appendChild(button);
     button.click();
+  }
+
+  public totalCartAmount(): number {
+    return this.cartItems
+      .reduce((sum, current) => sum + current.book.price * current.quantity, 0);
+  }
+
+  public clearCart(): void {
+    this.cartItems = []
   }
 
 }
